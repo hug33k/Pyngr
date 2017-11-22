@@ -29,6 +29,12 @@ class Website(object):
             rule=self.rule
         )
 
+    def __eq__(self, other):
+        return (self.url == other.url and
+                self.credentials == other.credentials and
+                self.rule == other.rule and
+                self.hook == other.hook)
+
     def add_to_scheduler(self, scheduler, job):
         cron.add_to_scheduler(self, scheduler, job)
 

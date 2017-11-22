@@ -1,3 +1,20 @@
+#   * * * * *
+#   ^ ^ ^ ^ ^
+#   | | | | |
+#   | | | | +-- Day of the month    ( Range: 1-31 )
+#   | | | +---- Day of the week     ( Range: 1-7  )
+#   | | +------ Hour                ( Range: 0-23 )
+#   | +-------- Minute              ( Range: 0-59 )
+#   +---------- Second              ( Range: 0-59 )
+#
+#   Valid inputs : Number, '*', '-', '/', ','
+#       Example : '10 * 5-50 */15 1,2,3 * *'
+#
+#   Invalid inputs : '*/0', 'number/number', 'anything/*'
+#
+#   Priorities : ',' => '-' => '/'
+#       Example : '1,2,3,5-10/2,15' => '1,2,3,5,7,9,15'
+
 _values_ranges = [(0, 59), (0, 59), (0, 23), (1, 31), (1, 12), (1, 7), None]
 
 
@@ -40,6 +57,9 @@ def _get_list(item):
 def _is_in_range(item, value_range, wildcard_allowed=True):
     if value_range is None or (item is "*" and wildcard_allowed):
         return
+    if not _is_valid_value(item):
+        raise SyntaxError("{item} is not valid"
+                          .format(item=item))
     if not (int(item) in range(value_range[0], (value_range[1] + 1))):
         raise SyntaxError("{item} is not in range ({range_min} - {range_max})"
                           .format(item=item, range_min=value_range[0], range_max=value_range[1]))
