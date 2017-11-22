@@ -6,14 +6,17 @@ class Website(object):
 
     defaultValues = {
         "credentials": None,
-        "rule": "* * * * * *"
+        "rule": "* * * * * * *"
     }
 
-    def __init__(self, url, credentials=defaultValues["credentials"], rule=defaultValues["rule"]):
+    def __init__(self, url,
+                 credentials=defaultValues["credentials"],
+                 rule=defaultValues["rule"]):
         self.url = url
         self.credentials = credentials
         self.rule = rule
         self.uuid = uuid.uuid1()
+        self.hook = None
 
     def __str__(self):
         return """Site {uuid}
@@ -27,10 +30,13 @@ class Website(object):
         )
 
     def add_to_scheduler(self, scheduler, job):
-        cron.add_to_scheduler(self.rule, self.uuid, scheduler, job)
+        cron.add_to_scheduler(self, scheduler, job)
 
     def clear_from_scheduler(self, scheduler):
         scheduler.clear(self.uuid)
+
+    def set_hook(self, hook):
+        self.hook = hook
 
     @staticmethod
     def generate_from_json(data):
